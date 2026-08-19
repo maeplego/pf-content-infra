@@ -21,4 +21,10 @@ docker compose up -d --build
 
 停止は `docker compose down` です。シード記事は架空です。認証は開発用だけです。
 
+Compose 起動後のヘルス:
+
+```powershell
+node scripts/compose-smoke.mjs http://localhost:3007/api/health http://localhost:8094/health http://localhost:8094/ready
+```
+
 Kubernetes 連携は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の content overlay です。
