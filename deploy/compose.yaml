@@ -1,0 +1,71 @@
+services:
+  content-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: content
+      POSTGRES_PASSWORD: content
+      POSTGRES_DB: blog
+    ports:
+      - "5437:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U content -d blog"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - content-pg:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+  content-redis:
+    image: redis:7-alpine
+    ports:
+      - "6377:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  shortener:
+    build:
+      context: ../../pf-content-shortener
+      dockerfile: Dockerfile
+    environment:
+      SHORTENER_HTTP_PORT: "8094"
+      SHORTENER_DEV_AUTH: ${SHORTENER_DEV_AUTH:-true}
+      SHORTENER_DATABASE_URL: ${SHORTENER_DATABASE_URL:-postgres://content:content@content-db:5432/shortener?sslmode=disable}
+      SHORTENER_REDIS_URL: ${SHORTENER_REDIS_URL:-redis://content-redis:6379/0}
+      SHORTENER_PUBLIC_BASE: ${SHORTENER_PUBLIC_BASE:-http://localhost:8094}
+      SHORTENER_ALLOW_HOSTS: ${SHORTENER_ALLOW_HOSTS:-localhost,127.0.0.1}
+      SHORTENER_CORS_ORIGIN: ${SHORTENER_CORS_ORIGIN:-http://localhost:3007}
+    ports:
+      - "8094:8094"
+    depends_on:
+      content-db:
+        condition: service_healthy
+      content-redis:
+        condition: service_healthy
+
+  blog:
+    build:
+      context: ../../pf-content-blog
+      dockerfile: Dockerfile
+      args:
+        CONTENT_PUBLIC_URL: ${CONTENT_PUBLIC_URL:-http://localhost:3007}
+    environment:
+      CONTENT_DEV_AUTH: ${CONTENT_DEV_AUTH:-true}
+      CONTENT_PUBLIC_URL: ${CONTENT_PUBLIC_URL:-http://localhost:3007}
+      CONTENT_DATABASE_URL: ${CONTENT_DATABASE_URL:-postgres://content:content@content-db:5432/blog?sslmode=disable}
+      SHORTENER_API_URL: ${SHORTENER_API_URL:-http://shortener:8094}
+      PORT: "3007"
+      HOSTNAME: "0.0.0.0"
+    ports:
+      - "3007:3007"
+    depends_on:
+      content-db:
+        condition: service_healthy
+      shortener:
+        condition: service_started
+
+volumes:
+  content-pg:
