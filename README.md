@@ -1,6 +1,6 @@
 # pf-content-infra
 
-P08 の単体連携 Compose です。ブログ（`pf-content-blog`）と短縮（`pf-content-shortener`）を同じ Postgres / Redis 上で起動します。**overlay E と Kubernetes は未着手。**
+P08 の単体連携 Compose です。ブログ（`pf-content-blog`）と短縮（`pf-content-shortener`）を同じ Postgres / Redis 上で起動します。**連携デモの overlay E は `pf-cloud-k8s`（Deployment 本文は各製品 `deploy/k8s/`）。**
 
 学習用です。公開デモの短縮先は `localhost` / `127.0.0.1` だけです。
 
@@ -29,4 +29,4 @@ docker compose up -d --build
 ## 既知の制限
 
 - 開発認証のみ（`X-Dev-User-Sub` / 管理 cookie）
-- レート制限、日次グラフ UI、OIDC、overlay E なし
+- レート制限、日次グラフ UI、OIDC なし。K8s は overlay E（製品 `deploy/k8s/`）
