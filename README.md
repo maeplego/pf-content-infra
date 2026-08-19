@@ -1,12 +1,10 @@
 # pf-content-infra
 
-P08 の単体連携 Compose です。ブログ（`pf-content-blog`）と短縮（`pf-content-shortener`）を同じ Postgres / Redis 上で起動します。**連携デモの overlay E は `pf-cloud-k8s`（Deployment 本文は各製品 `deploy/k8s/`）。**
+技術ブログと URL 短縮を、同じ Postgres / Redis で起動する Compose です。学習用です。公開デモの短縮先は `localhost` と `127.0.0.1` だけです。
 
-学習用です。公開デモの短縮先は `localhost` / `127.0.0.1` だけです。
+製品コードは [pf-content-blog](https://github.com/maeplego/pf-content-blog) と [pf-content-shortener](https://github.com/maeplego/pf-content-shortener) にあります。このリポジトリは束ね役です。兄弟ディレクトリとして clone してください。
 
-## デモ
-
-リポジトリはワークスペースの兄弟ディレクトリです。このフォルダから:
+## 起動
 
 ```powershell
 cd deploy
@@ -17,16 +15,10 @@ docker compose up -d --build
 | URL | 用途 |
 | --- | --- |
 | http://localhost:3007 | 公開ブログ |
-| http://localhost:3007/demo | Markdown + 下書き/公開 + 短縮の手順 |
-| http://localhost:3007/admin | Dev login → 下書きプレビュー → Publish |
-| http://localhost:8094/health | 短縮 liveness |
-| http://localhost:8094/ready | 短縮 readiness |
+| http://localhost:3007/demo | Markdown、下書き/公開、短縮の手順 |
+| http://localhost:3007/admin | 開発ログイン → プレビュー → 公開 |
+| http://localhost:8094/health | 短縮 |
 
-停止: `docker compose down`。
+停止は `docker compose down` です。シード記事は架空です。認証は開発用だけです。
 
-シード記事は架空の Harbor Press。実在の個人情報は使いません。画像はブログの `/harbor.svg`（P03 任意・未接続）。
-
-## 既知の制限
-
-- 開発認証のみ（`X-Dev-User-Sub` / 管理 cookie）
-- レート制限、日次グラフ UI、OIDC なし。K8s は overlay E（製品 `deploy/k8s/`）
+Kubernetes 連携は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の content overlay です。

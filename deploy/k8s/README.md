@@ -1,3 +1,3 @@
-# P08 content-infra
+# Kubernetes について
 
-Compose の束ね役。Kubernetes 上の Deployment は置かない。連携デモは兄弟 `pf-content-blog` / `pf-content-shortener` の `deploy/k8s/` を `pf-cloud-k8s` overlay `e-content` が参照する。
+このリポジトリは Compose の束ね役です。クラスタ上の Deployment は置きません。マニフェストはブログと短縮の各 `deploy/k8s/` にあり、[pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の content overlay が参照します。
