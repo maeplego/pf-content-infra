@@ -57,6 +57,7 @@ services:
       CONTENT_PUBLIC_URL: ${CONTENT_PUBLIC_URL:-http://localhost:3007}
       CONTENT_DATABASE_URL: ${CONTENT_DATABASE_URL:-postgres://content:content@content-db:5432/blog?sslmode=disable}
       SHORTENER_API_URL: ${SHORTENER_API_URL:-http://shortener:8094}
+      MEDIA_API_URL: ${MEDIA_API_URL:-}
       PORT: "3007"
       HOSTNAME: "0.0.0.0"
     ports:
