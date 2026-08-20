@@ -1,0 +1,5 @@
+# Optional: enable P03 cover upload on blog when pf-media Compose runs on the host.
+services:
+  blog:
+    environment:
+      MEDIA_API_URL: ${MEDIA_API_URL:-http://host.docker.internal:8090}

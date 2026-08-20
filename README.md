@@ -21,6 +21,16 @@ docker compose up -d --build
 
 停止は `docker compose down` です。シード記事は架空です。認証は開発用だけです。
 
+P03 で cover をアップロードする場合は [pf-media](https://github.com/maeplego/pf-media) をホストで起動し、次で `MEDIA_API_URL` を渡します。
+
+```powershell
+docker compose -f compose.yaml -f compose.media.yaml up -d --build
+```
+
+| URL | 用途 |
+| --- | --- |
+| http://localhost:3007/admin | 管理画面（`MEDIA_API_URL` 設定時 cover アップロード可） |
+
 Compose 起動後のヘルス:
 
 ```powershell
